@@ -29,6 +29,7 @@ const Map = withScriptjs(
     };
 
     const { center } = props;
+    console.log("Map",{center})
     return (
       <GoogleMap
         ref={onMapMounted}

@@ -7,7 +7,14 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentPosition: null
+      // currentPosition: {
+      //   lat: 43.3859738,
+      //   lng: -4.4057574
+      // }
+      currentPosition: {
+        lat: 54.3419319,
+        lng: 9.9855943
+      }
     };
   }
 
