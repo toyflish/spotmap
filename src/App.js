@@ -1,25 +1,58 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Map from './components/Map';
+import './App.scss';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentPosition: null
+    };
+  }
+
+  componentDidMount() {
+    this.getGeoLocation();
+  }
+
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        console.log({ coords });
+        this.setState(prevState => ({
+          currentPosition: {
+            lat: coords.latitude,
+            lng: coords.longitude
+          }
+        }));
+      });
+    } else {
+      console.log('Navigator no geolocation');
+    }
+  };
+
+  handleChangedBounds = bounds => {
+    console.log('toplevel handleChangedBounds', { bounds });
+  };
+
   render() {
+    const { currentPosition } = this.state;
+
+    const mapUrl = `https://maps.googleapis.com/maps/api/js?key=${
+      process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+    }&v=3.exp&libraries=geometry,drawing,places`;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Map
+          center={currentPosition}
+          onChangedBounds={this.handleChangedBounds}
+          googleMapURL={mapUrl}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={
+            <div className="map-container" style={{ height: `100vh` }} />
+          }
+          mapElement={<div style={{ height: `100%` }} />}
+        />
       </div>
     );
   }
